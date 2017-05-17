@@ -32,7 +32,7 @@ import org.ballerinalang.natives.annotations.ReturnType;
 import java.io.ByteArrayInputStream;
 
 /**
- * Convert JSON to String.
+ * Get Inputstream from a blob
  */
 @BallerinaFunction(
         packageName = "ballerina.lang.blobs",
@@ -42,7 +42,7 @@ import java.io.ByteArrayInputStream;
         isPublic = true
 )
 @BallerinaAnnotation(annotationName = "Description", attributes = {@Attribute(name = "value",
-        value = "Converts JSON to a string") })
+        value = "Get an inputstream from a blob") })
 @BallerinaAnnotation(annotationName = "Param", attributes = {@Attribute(name = "b",
         value = "BLOB value to be converted") })
 @BallerinaAnnotation(annotationName = "Return", attributes = {@Attribute(name = "InputStream",

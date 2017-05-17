@@ -44,7 +44,7 @@ import java.io.UnsupportedEncodingException;
         isPublic = true
 )
 @BallerinaAnnotation(annotationName = "Description", attributes = {@Attribute(name = "value",
-        value = "Converts JSON to a string") })
+        value = "Converts BLOB to a string") })
 @BallerinaAnnotation(annotationName = "Param", attributes = {@Attribute(name = "b",
         value = "BLOB value to be converted") })
 @BallerinaAnnotation(annotationName = "Param", attributes = {@Attribute(name = "encoding",

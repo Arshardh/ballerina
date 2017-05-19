@@ -24,7 +24,6 @@ import org.ballerinalang.model.values.BArray;
 import org.ballerinalang.model.values.BReader;
 import org.ballerinalang.model.values.BString;
 import org.ballerinalang.model.values.BValue;
-import org.ballerinalang.nativeimpl.connectors.jms.client.Send;
 import org.ballerinalang.natives.AbstractNativeFunction;
 import org.ballerinalang.natives.annotations.Argument;
 import org.ballerinalang.natives.annotations.Attribute;
@@ -57,7 +56,7 @@ import java.io.IOException;
 @BallerinaAnnotation(annotationName = "Return", attributes = {@Attribute(name = "line",
         value = "The array containing the record") })
 public class ReadCSVRecord extends AbstractNativeFunction {
-    private static final Logger log = LoggerFactory.getLogger(Send.class);
+    private static final Logger log = LoggerFactory.getLogger(ReadCSVRecord.class);
     @Override
     public BValue[] execute(Context context) {
         BArray<BString> result = new BArray<>(BString.class);

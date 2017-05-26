@@ -12,16 +12,14 @@ import java.io.OutputStream;
  *
  * @since 0.9.0
  */
-public class BOutputStream implements BRefType {
-
-    private BufferedOutputStream value;
+public class BOutputStream extends BufferedOutputStream implements BRefType {
 
     public BOutputStream(OutputStream out) {
-        value = new BufferedOutputStream(out);
+        super(out);
     }
 
     public BOutputStream(OutputStream out, int size) {
-        value = new BufferedOutputStream(out, size);
+        super(out, size);
     }
 
     @Override
@@ -35,7 +33,7 @@ public class BOutputStream implements BRefType {
     }
 
     @Override
-    public BufferedOutputStream value() {
-        return value;
+    public Object value() {
+        return null;
     }
 }

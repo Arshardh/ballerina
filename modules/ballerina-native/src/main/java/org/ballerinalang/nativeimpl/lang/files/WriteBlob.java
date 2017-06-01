@@ -63,7 +63,7 @@ public class WriteBlob extends AbstractNativeFunction {
                 }
             }
             outputStream = new FileOutputStream(destinationFile, append.booleanValue());
-            outputStream.write(content.value());
+            outputStream.write(content.blobValue());
             outputStream.flush();
 
         } catch (IOException e) {

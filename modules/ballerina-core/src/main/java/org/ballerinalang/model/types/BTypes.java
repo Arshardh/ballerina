@@ -47,6 +47,7 @@ public class BTypes {
     public static BType typeAny;
     public static BType typeConnector;
     public static BType typeNull;
+    public static BType typeBlob;
 
     private static boolean initialized = false;
     private static Set<String> builtInTypeNames = new HashSet<>();
@@ -70,6 +71,8 @@ public class BTypes {
         globalScope.define(typeDatatable.getSymbolName(), typeDatatable);
         globalScope.define(typeAny.getSymbolName(), typeAny);
         globalScope.define(typeConnector.getSymbolName(), typeConnector);
+        globalScope.define(typeNull.getSymbolName(), typeNull);
+        globalScope.define(typeBlob.getSymbolName(), typeBlob);
 
         builtInTypeNames.add(TypeConstants.INT_TNAME);
         builtInTypeNames.add(TypeConstants.STRING_TNAME);
@@ -83,6 +86,8 @@ public class BTypes {
         builtInTypeNames.add(TypeConstants.CONNECTOR_TNAME);
         builtInTypeNames.add(TypeConstants.STRUCT_TNAME);
         builtInTypeNames.add(TypeConstants.ANY_TNAME);
+        builtInTypeNames.add(TypeConstants.NULL_TNAME);
+        builtInTypeNames.add(TypeConstants.BLOB_TNAME);
 
         TypeLattice.loadImplicitCastLattice(globalScope);
         TypeLattice.loadExplicitCastLattice(globalScope);
@@ -103,7 +108,8 @@ public class BTypes {
         typeMap = new BMapType(TypeConstants.MAP_TNAME, typeAny, null, globalScope);
         typeConnector = new BConnectorType(TypeConstants.CONNECTOR_TNAME, null, globalScope);
         typeNull = new BNullType(TypeConstants.NULL_TNAME, null, globalScope);
-        
+        typeBlob = new BBlobType(TypeConstants.BLOB_TNAME, null, globalScope);
+
         initialized = true;
     }
 
@@ -166,7 +172,8 @@ public class BTypes {
         if (type == BTypes.typeInt ||
                 type == BTypes.typeString ||
                 type == BTypes.typeFloat ||
-                type == BTypes.typeBoolean) {
+                type == BTypes.typeBoolean ||
+                type == BTypes.typeBlob) {
             return true;
         }
 
@@ -175,5 +182,22 @@ public class BTypes {
 
     public static boolean isBuiltInTypeName(String paramName) {
         return builtInTypeNames.contains(paramName);
+    }
+
+    public static BType getTypeFromName(String typeName) {
+        switch (typeName) {
+            case TypeConstants.JSON_TNAME:
+                return typeJSON;
+            case TypeConstants.XML_TNAME:
+                return typeXML;
+            case TypeConstants.MAP_TNAME:
+                return typeMap;
+            case TypeConstants.MESSAGE_TNAME:
+                return typeMessage;
+            case TypeConstants.DATATABLE_TNAME:
+                return typeDatatable;
+            default:
+                throw new IllegalStateException("Unknown type name");
+        }
     }
 }

@@ -49,80 +49,108 @@ public interface InstructionCodes {
     int SLOAD = 24;
     int BLOAD = 25;
     int RLOAD = 26;
-    int IALOAD = 27;
-    int FALOAD = 28;
-    int SALOAD = 29;
-    int BALOAD = 30;
-    int RALOAD = 31;
-    int JSONALOAD = 32;
-    int IGLOAD = 33;
-    int FGLOAD = 34;
-    int SGLOAD = 35;
-    int BGLOAD = 36;
-    int RGLOAD = 37;
+    int LLOAD = 27;
+    int IALOAD = 28;
+    int FALOAD = 29;
+    int SALOAD = 30;
+    int BALOAD = 31;
+    int RALOAD = 32;
+    int LALOAD = 33;
+    int JSONALOAD = 34;
+    int IGLOAD = 35;
+    int FGLOAD = 36;
+    int SGLOAD = 37;
+    int BGLOAD = 38;
+    int RGLOAD = 39;
+    int LGLOAD = 40;
 
-    int ISTORE = 38;
-    int FSTORE = 39;
-    int SSTORE = 40;
-    int BSTORE = 41;
-    int RSTORE = 42;
-    int IASTORE = 43;
-    int FASTORE = 44;
-    int SASTORE = 45;
-    int BASTORE = 46;
-    int RASTORE = 47;
-    int JSONASTORE = 48;
-    int IGSTORE = 49;
-    int FGSTORE = 50;
-    int SGSTORE = 51;
-    int BGSTORE = 52;
-    int RGSTORE = 53;
+    int ISTORE = 41;
+    int FSTORE = 42;
+    int SSTORE = 43;
+    int BSTORE = 44;
+    int RSTORE = 45;
+    int LSTORE = 46;
+    int IASTORE = 47;
+    int FASTORE = 48;
+    int SASTORE = 49;
+    int BASTORE = 50;
+    int RASTORE = 51;
+    int LASTORE = 52;
+    int JSONASTORE = 53;
+    int IGSTORE = 54;
+    int FGSTORE = 55;
+    int SGSTORE = 56;
+    int BGSTORE = 57;
+    int RGSTORE = 58;
+    int LGSTORE = 59;
 
-    int IFIELDLOAD = 54;
-    int FFIELDLOAD = 55;
-    int SFIELDLOAD = 56;
-    int BFIELDLOAD = 57;
-    int RFIELDLOAD = 58;
+    int IFIELDLOAD = 60;
+    int FFIELDLOAD = 61;
+    int SFIELDLOAD = 62;
+    int BFIELDLOAD = 63;
+    int RFIELDLOAD = 64;
+    int LFIELDLOAD = 65;
 
-    int IFIELDSTORE = 60;
-    int FFIELDSTORE = 61;
-    int SFIELDSTORE = 62;
-    int BFIELDSTORE = 63;
-    int RFIELDSTORE = 64;
+    int IFIELDSTORE = 66;
+    int FFIELDSTORE = 67;
+    int SFIELDSTORE = 68;
+    int BFIELDSTORE = 69;
+    int RFIELDSTORE = 70;
+    int LFIELDSTORE = 71;
 
     // mapload map_reg_index key value_reg_index
-    int MAPLOAD = 65;
+    int MAPLOAD = 72;
     // mapstore map_reg_index key value_reg_index
-    int MAPSTORE = 66;
+    int MAPSTORE = 73;
 
     // jsonload json_reg_index key json_value_reg_index
-    int JSONLOAD = 67;
-    int JSONSTORE = 68;
+    int JSONLOAD = 74;
+    int JSONSTORE = 75;
 
-    int IADD = 70;
-    int FADD = 71;
-    int SADD = 72;
-    int ISUB = 73;
-    int FSUB = 74;
-    int IMUL = 75;
-    int FMUL = 76;
-    int IDIV = 77;
-    int FDIV = 78;
-    int IMOD = 79;
-    int FMOD = 80;
-    int INEG = 81;
-    int FNEG = 82;
+    int IADD = 76;
+    int FADD = 77;
+    int SADD = 78;
+    int ISUB = 79;
+    int FSUB = 80;
+    int IMUL = 81;
+    int FMUL = 82;
+    int IDIV = 83;
+    int FDIV = 84;
+    int IMOD = 85;
+    int FMOD = 86;
+    int INEG = 87;
+    int FNEG = 88;
+    int BNOT = 89;
 
-    int ICMP = 100;
-    int FCMP = 101;
-    int SCMP = 102;
-    int BCMP = 103;
-    int IFEQ = 110;
-    int IFNE = 111;
-    int IFLT = 112;
-    int IFGE = 113;
-    int IFGT = 114;
-    int IFLE = 115;
+    int IEQ = 90;
+    int FEQ = 91;
+    int SEQ = 92;
+    int BEQ = 93;
+    int REQ = 94;
+
+    int INE = 95;
+    int FNE = 96;
+    int SNE = 97;
+    int BNE = 98;
+    int RNE = 99;
+
+    int IGT = 100;
+    int FGT = 101;
+
+    int IGE = 102;
+    int FGE = 103;
+
+    int ILT = 104;
+    int FLT = 105;
+
+    int ILE = 106;
+    int FLE = 107;
+
+    int REQ_NULL = 108;
+    int RNE_NULL = 109;
+
+    int BR_TRUE = 110;
+    int BR_FALSE = 111;
 
     int GOTO = 119;
     int CALL = 120;
@@ -131,6 +159,8 @@ public interface InstructionCodes {
     int NACALL = 123;
     int RET = 124;
     int REP = 125;
+    int THROW = 126;
+    int ERRSTORE = 127;
 
     // Type Cast/Conversion related instructions
     int I2F = 130;
@@ -159,20 +189,28 @@ public interface InstructionCodes {
     int JSON2B = 153;
 
     // Type cast
-    int ANY2I = 154;
-    int ANY2F = 155;
-    int ANY2S = 156;
-    int ANY2B = 157;
-    int ANY2JSON = 158;
-    int ANY2MAP = 159;
-    int NULL2JSON = 160;
+    int ANY2I = 155;
+    int ANY2F = 156;
+    int ANY2S = 157;
+    int ANY2B = 158;
+    int ANY2JSON = 159;
+    int ANY2T = 160;
+    int ANY2MAP = 161;
+    int NULL2JSON = 162;
+    int CHECKCAST = 163;
+    int ANY2MSG = 164;
+
+    int WRKINVOKE = 190;
+    int WRKREPLY = 191;
 
     int INEWARRAY = 200;
     int FNEWARRAY = 201;
     int SNEWARRAY = 202;
     int BNEWARRAY = 203;
     int RNEWARRAY = 204;
-    int JSONNEWARRAY = 205;
+    int LNEWARRAY = 205;
+    int JSONNEWARRAY = 206;
+    int ARRAYLEN = 207;
 
     int NEWSTRUCT = 210;
     int NEWCONNECTOR = 211;

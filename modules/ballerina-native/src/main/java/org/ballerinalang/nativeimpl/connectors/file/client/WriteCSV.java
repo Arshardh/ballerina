@@ -16,12 +16,14 @@ import org.ballerinalang.natives.connectors.BallerinaConnectorManager;
 import org.ballerinalang.util.exceptions.BallerinaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.messaging.BinaryCarbonMessage;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.StreamingCarbonMessage;
 import org.wso2.carbon.messaging.exceptions.ClientConnectorException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,12 +80,12 @@ public class WriteCSV extends AbstractFileAction {
         }
         String content = stringBuffer.toString();
         content += "\n";
-        InputStream is = new ByteArrayInputStream(Charset.forName("UTF-16").encode(content).array());
-        CarbonMessage message = new StreamingCarbonMessage(is);
+        byte[] byteContent = content.getBytes();
+        BinaryCarbonMessage message = new BinaryCarbonMessage(ByteBuffer.wrap(byteContent), true);
 
         String pathString = path.stringValue();
         propertyMap.put("uri", pathString);
-        propertyMap.put("action", "append");
+        propertyMap.put("action", "write");
         try {
             //Getting the sender instance and sending the message.
             BallerinaConnectorManager.getInstance().getClientConnector("file")

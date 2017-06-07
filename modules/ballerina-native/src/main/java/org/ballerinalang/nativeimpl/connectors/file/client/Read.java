@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @BallerinaAction(
         packageName = "ballerina.net.file",
-        actionName = "send",
+        actionName = "read",
         connectorName = ClientConnector.CONNECTOR_NAME,
         args = { @Argument(name = "fileClientConnector", type = TypeEnum.CONNECTOR),
                  @Argument(name = "m", type = TypeEnum.MESSAGE),
@@ -42,10 +42,9 @@ import java.util.Map;
         value = "Message") })
 @BallerinaAnnotation(annotationName = "Param", attributes = { @Attribute(name = "path",
         value = "Path of the file") })
-//@BallerinaAnnotation(annotationName = "Param", attributes = { @Attribute(name = "properties",
-      //  value = "Properties") })
-public class Send extends AbstractFileAction {
-    private static final Logger log = LoggerFactory.getLogger(Send.class);
+
+public class Read extends AbstractFileAction {
+    private static final Logger log = LoggerFactory.getLogger(Read.class);
     @Override public BValue execute(Context context) {
 
         // Extracting Argument values

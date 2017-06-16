@@ -20,11 +20,11 @@ package org.ballerinalang.services.dispatchers.file;
 
 import org.ballerinalang.bre.Context;
 import org.ballerinalang.model.AnnotationAttachment;
-import org.ballerinalang.model.AnnotationAttributeValue;
 import org.ballerinalang.model.Service;
 import org.ballerinalang.natives.connectors.BallerinaConnectorManager;
 import org.ballerinalang.services.dispatchers.ServiceDispatcher;
 import org.ballerinalang.util.codegen.AnnotationAttachmentInfo;
+import org.ballerinalang.util.codegen.AnnotationAttributeValue;
 import org.ballerinalang.util.codegen.ServiceInfo;
 import org.ballerinalang.util.exceptions.BallerinaException;
 import org.wso2.carbon.messaging.CarbonCallback;
@@ -124,7 +124,24 @@ public class FileServiceDispatcher implements ServiceDispatcher {
                 Constants.ANNOTATION_FILE_SOURCE);
 
         if (annotationInfo != null) {
-            Map<String, String> elementsMap = null; // TODO : Fix Annotation attachment in code generation.
+            Map<String, String> elementsMap = new HashMap<>();
+            AnnotationAttributeValue value =
+                    annotationInfo.getAnnotationAttributeValue(Constants.ANNOTATION_ATTRIBUTE_POLLING_INTERVAL);
+            if (value != null) {
+                elementsMap.put(Constants.ANNOTATION_ATTRIBUTE_POLLING_INTERVAL, value.getStringValue());
+            }
+            value = annotationInfo.getAnnotationAttributeValue(Constants.ANNOTATION_ATTRIBUTE_PROTOCOL);
+            if (value != null) {
+                elementsMap.put(Constants.ANNOTATION_ATTRIBUTE_PROTOCOL, value.getStringValue());
+            }
+            value = annotationInfo.getAnnotationAttributeValue(Constants.ANNOTATION_ATTRIBUTE_READ_FROM_BEGINNING);
+            if (value != null) {
+                elementsMap.put(Constants.ANNOTATION_ATTRIBUTE_READ_FROM_BEGINNING, value.getStringValue());
+            }
+            value = annotationInfo.getAnnotationAttributeValue(Constants.ANNOTATION_ATTRIBUTE_URI);
+            if (value != null) {
+                elementsMap.put(Constants.ANNOTATION_ATTRIBUTE_URI, value.getStringValue());
+            }
             String serviceName = service.getName();
             ServerConnector fileServerConnector = BallerinaConnectorManager.getInstance().createServerConnector(
                     Constants.PROTOCOL_FILE, serviceName, elementsMap);

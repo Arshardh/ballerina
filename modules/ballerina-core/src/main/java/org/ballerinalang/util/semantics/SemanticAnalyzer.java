@@ -130,6 +130,7 @@ import org.ballerinalang.model.types.TypeEdge;
 import org.ballerinalang.model.types.TypeLattice;
 import org.ballerinalang.model.types.TypeTags;
 import org.ballerinalang.model.util.LangModelUtils;
+import org.ballerinalang.model.values.BFloat;
 import org.ballerinalang.model.values.BString;
 import org.ballerinalang.natives.NativeUnitProxy;
 import org.ballerinalang.natives.connectors.AbstractNativeAction;
@@ -1160,8 +1161,8 @@ public class SemanticAnalyzer implements NodeVisitor {
 
         // Check whether the right-hand type can be assigned to the left-hand type.
         AssignabilityResult result = performAssignabilityCheck(lhsType, rExpr);
-        if (result.implicitCastExpr != null) {
-            varDefStmt.setRExpr(result.implicitCastExpr);
+        if (result.expression != null) {
+            varDefStmt.setRExpr(result.expression);
         } else if (!result.assignable) {
             BLangExceptionHelper.throwSemanticError(varDefStmt, SemanticErrors.INCOMPATIBLE_ASSIGNMENT,
                     rhsType, lhsType);
@@ -1217,8 +1218,8 @@ public class SemanticAnalyzer implements NodeVisitor {
 
         // Check whether the right-hand type can be assigned to the left-hand type.
         AssignabilityResult result = performAssignabilityCheck(lhsType, rExpr);
-        if (result.implicitCastExpr != null) {
-            assignStmt.setRExpr(result.implicitCastExpr);
+        if (result.expression != null) {
+            assignStmt.setRExpr(result.expression);
         } else if (!result.assignable) {
             BLangExceptionHelper.throwSemanticError(assignStmt, SemanticErrors.INCOMPATIBLE_ASSIGNMENT,
                     rhsType, lhsType);
@@ -1712,8 +1713,8 @@ public class SemanticAnalyzer implements NodeVisitor {
 
                 // Check type assignability
                 AssignabilityResult result = performAssignabilityCheck(lhsType, returnArgExprs[i]);
-                if (result.implicitCastExpr != null) {
-                    returnArgExprs[i] = result.implicitCastExpr;
+                if (result.expression != null) {
+                    returnArgExprs[i] = result.expression;
                 } else if (!result.assignable) {
                     BLangExceptionHelper.throwSemanticError(returnStmt,
                             SemanticErrors.CANNOT_USE_TYPE_IN_RETURN_STATEMENT, lhsType, rhsType);
@@ -2024,8 +2025,8 @@ public class SemanticAnalyzer implements NodeVisitor {
 
             visitSingleValueExpr(argExpr);
             AssignabilityResult result = performAssignabilityCheck(expectedElementType, argExpr);
-            if (result.implicitCastExpr != null) {
-                argExprs[i] = result.implicitCastExpr;
+            if (result.expression != null) {
+                argExprs[i] = result.expression;
             } else if (!result.assignable) {
                 BLangExceptionHelper.throwSemanticError(argExpr, SemanticErrors.INCOMPATIBLE_ASSIGNMENT,
                         argExpr.getType(), expectedElementType);
@@ -2083,8 +2084,8 @@ public class SemanticAnalyzer implements NodeVisitor {
 
             // Check whether the right-hand type can be assigned to the left-hand type.
             AssignabilityResult result = performAssignabilityCheck(structFieldType, valueExpr);
-            if (result.implicitCastExpr != null) {
-                valueExpr = result.implicitCastExpr;
+            if (result.expression != null) {
+                valueExpr = result.expression;
                 keyValueExpr.setValueExpr(valueExpr);
             } else if (!result.assignable) {
                 BLangExceptionHelper.throwSemanticError(keyExpr, SemanticErrors.INCOMPATIBLE_TYPES,
@@ -2831,8 +2832,8 @@ public class SemanticAnalyzer implements NodeVisitor {
                 BType lhsType = BTypes.resolveType(simpleTypeName, currentScope, callableIExpr.getNodeLocation());
 
                 AssignabilityResult result = performAssignabilityCheck(lhsType, argExpr);
-                if (result.implicitCastExpr != null) {
-                    updatedArgExprs[i] = result.implicitCastExpr;
+                if (result.expression != null) {
+                    updatedArgExprs[i] = result.expression;
                 } else if (!result.assignable) {
                     // TODO do we need to throw an error here?
                     implicitCastPossible = false;
@@ -2846,8 +2847,8 @@ public class SemanticAnalyzer implements NodeVisitor {
                 BType lhsType = ((CallableUnit) callableSymbol).getParameterDefs()[i].getType();
 
                 AssignabilityResult result = performAssignabilityCheck(lhsType, argExpr);
-                if (result.implicitCastExpr != null) {
-                    updatedArgExprs[i] = result.implicitCastExpr;
+                if (result.expression != null) {
+                    updatedArgExprs[i] = result.expression;
                 } else if (!result.assignable) {
                     // TODO do we need to throw an error here?
                     implicitCastPossible = false;
@@ -3486,7 +3487,7 @@ public class SemanticAnalyzer implements NodeVisitor {
         TypeCastExpression implicitCastExpr = checkWideningPossible(lhsType, rhsExpr);
         if (implicitCastExpr != null) {
             assignabilityResult.assignable = true;
-            assignabilityResult.implicitCastExpr = implicitCastExpr;
+            assignabilityResult.expression = implicitCastExpr;
             return assignabilityResult;
         }
 
@@ -3497,8 +3498,17 @@ public class SemanticAnalyzer implements NodeVisitor {
             implicitCastExpr.setOpcode(InstructionCodes.NOP);
 
             assignabilityResult.assignable = true;
-            assignabilityResult.implicitCastExpr = implicitCastExpr;
+            assignabilityResult.expression = implicitCastExpr;
             return assignabilityResult;
+        }
+
+        if (lhsType == BTypes.typeFloat && rhsType == BTypes.typeInt && rhsExpr instanceof BasicLiteral) {
+            BasicLiteral newExpr = new BasicLiteral(rhsExpr.getNodeLocation(), rhsExpr.getWhiteSpaceDescriptor(),
+                    new SimpleTypeName(TypeConstants.FLOAT_TNAME), new BFloat(((BasicLiteral) rhsExpr)
+                    .getBValue().intValue()));
+            visitSingleValueExpr(newExpr);
+            assignabilityResult.assignable = true;
+            assignabilityResult.expression = newExpr;
         }
 
         // Further check whether types are assignable recursively, specially array types
@@ -3601,7 +3611,7 @@ public class SemanticAnalyzer implements NodeVisitor {
      */
     static class AssignabilityResult {
         boolean assignable;
-        TypeCastExpression implicitCastExpr;
+        Expression expression;
     }
 
 }
